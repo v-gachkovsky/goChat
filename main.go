@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/gorilla/mux"
 )
 
 type Message struct {
@@ -20,8 +21,11 @@ var upgrader = websocket.Upgrader{}
 func main() {
 	fs := http.FileServer(http.Dir("./public"))
 
-	http.Handle("/", fs)
-	http.HandleFunc("/ws", handleConnections)
+	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/ws", handleConnections)
+
+	router.PathPrefix("/").Handler(fs)
+	http.Handle("/", router)
 
 	go handleMessages()
 
