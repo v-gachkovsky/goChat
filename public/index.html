@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+    <div>
+        <label for="email-input">E-Mail</label>
+        <input id="email-input" type="text">
+
+        <label for="username-input">Username</label>
+        <input id="username-input" type="text">
+
+        <label for="message-input">Enter Your Message</label>
+        <input id="message-input" type="text">
+        <button id="send-button">Send</button>
+        <ul id="messages">
+            <!-- Messages here -->
+        </ul>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:8000/ws');
+        ws.addEventListener('message', e => {
+            const msg = JSON.parse(e.data);
+            const element = document.getElementById('messages');
+
+            const newMessage = document.createElement('li');
+            newMessage.innerHTML = 'From ' + msg.username + ': ' + msg.message;
+
+            element.appendChild(newMessage);
+        });
+
+        const messageInput = document.getElementById('message-input');
+        const emailInput = document.getElementById('email-input');
+        const usernameInput = document.getElementById('username-input');
+        const button = document.getElementById('send-button');
+
+
+        button.addEventListener('click', e => {
+            ws.send(JSON.stringify({
+                email: emailInput.value || '',
+                username: usernameInput.value || '',
+                message: messageInput.value || ''
+            }));
+        });
+    </script>
+
+</body>
+</html>
