@@ -16,26 +16,38 @@
 
 <script>
     let channel = 'first';
-    var socket = new WebSocket(`ws://localhost:8080/ws/${channel}`);
+    let socket = new WebSocket(`ws://localhost:8080/ws/${channel}`);
 
-    var button = document.getElementById("button");
-    button.addEventListener("click", function(event){
-        var text = document.getElementById("textbox").value;
+    let button = document.getElementById("button");
+    button.addEventListener("click", () => {
+        let text = document.getElementById("textbox").value;
         socket.send(text);
     });
 
-    socket.onopen = function(event){
+    socket.onopen = () => {
         console.log("Socket opened successfully");
-    }
+    };
 
-    socket.onmessage = function(event){
-        var box = document.createElement("div");
+    socket.onmessage = event => {
+        let box = document.createElement("div");
         box.innerHTML = event.data;
         document.getElementById("box").appendChild(box);
-    }
+    };
 
-    window.onbeforeunload = function(event){
+    window.onbeforeunload = () =>{
         socket.close();
+    };
+
+    const channelsRadios = document.getElementsByName('channel');
+    channelsRadios.forEach((radio) => {
+       radio.addEventListener('change', () => {
+           changeChannel(radio.value);
+       });
+    });
+
+    function changeChannel(channel) {
+        socket.close();
+        socket = new WebSocket(`ws://localhost:8080/ws/${channel}`);
     }
 </script>
 </body>

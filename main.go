@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/gorilla/mux"
+	"fmt"
 )
 
 var upgrader = websocket.Upgrader{}
@@ -85,6 +86,7 @@ func (c *Client) read(hubId string) {
 func wsPage(res http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	hubId := vars["hubId"]
+	fmt.Println(hubId)
 
 	conn, err := upgrader.Upgrade(res, req, nil)
 
