@@ -30,7 +30,7 @@
 
     socket.onmessage = event => {
         let box = document.createElement("div");
-        box.innerHTML = event.data;
+        box.innerHTML = channel + ': ' + event.data;
         document.getElementById("box").appendChild(box);
     };
 
